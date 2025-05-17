@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>🌱 TV Garden - Mundo</title>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #121212;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      background: #1f1f1f;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    input[type="file"], input[type="text"] {
+      background: #2a2a2a;
+      color: white;
+      border: none;
+      padding: 5px;
+      border-radius: 5px;
+      margin-left: 10px;
+    }
+
+    #player {
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    video {
+      width: 95%;
+      max-width: 1000px;
+      background: black;
+    }
+
+    #content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    #channelList {
+      width: 350px;
+      background: #1a1a1a;
+      padding: 10px;
+      overflow-y: auto;
+    }
+
+    #channelList input {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    #channelList ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #channelList li {
+      padding: 8px;
+      border-bottom: 1px solid #333;
+      cursor: pointer;
+    }
+
+    #channelList li:hover {
+      background-color: #333;
+    }
+
+    .section {
+      margin-top: 15px;
+    }
+
+    .section h4 {
+      margin-bottom: 8px;
+      border-bottom: 1px solid #555;
+      padding-bottom: 3px;
+    }
+
+    .world-item {
+      background: #292929;
+      margin-bottom: 6px;
+      padding: 6px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .world-item:hover {
+      background: #3a3a3a;
+    }
+
+    @media (max-width: 768px) {
+      #content {
+        flex-direction: column;
+      }
+
+      #channelList {
+        width: 100%;
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🌱 TV Garden - Mundo</h1>
+  <div>
+    <input type="file" id="m3uInput" accept=".m3u">
+  </div>
+</header>
+
+<div id="player">
+  <video id="video" controls autoplay></video>
+</div>
+
+<div id="content">
+  <div id="channelList">
+    <input type="text" id="searchInput" placeholder="Buscar canal...">
+
+    <div class="section">
+      <h4>🌍 Países</h4>
+      <div class="world-item" onclick="loadRemoteM3U('https://iptv-org.github.io/iptv/countries/mx.m3u')">🇲🇽 México</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://iptv-org.github.io/iptv/countries/us.m3u')">🇺🇸 USA</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://iptv-org.github.io/iptv/countries/ar.m3u')">🇦🇷 Argentina</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://iptv-org.github.io/iptv/countries/gb.m3u')">🇬🇧 Reino Unido</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://iptv-org.github.io/iptv/countries/fr.m3u')">🇫🇷 Francia</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://iptv-org.github.io/iptv/countries/br.m3u')">🇧🇷 Brasil</div>
+    </div>
+
+    <div class="section">
+      <h4>📺 Categorías</h4>
+      <div class="world-item" onclick="loadRemoteM3U('https://iptv-org.github.io/iptv/categories/news.m3u')">📰 Noticias</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://iptv-org.github.io/iptv/categories/sports.m3u')">⚽ Deportes</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://iptv-org.github.io/iptv/categories/music.m3u')">🎵 Música</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://iptv-org.github.io/iptv/categories/kids.m3u')">🧒 Niños</div>
+    </div>
+
+    <div class="section">
+      <h4>🈯 Idiomas</h4>
+      <div class="world-item" onclick="loadRemoteM3U('https://iptv-org.github.io/iptv/languages/spanish.m3u')">🇪🇸 Español</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://iptv-org.github.io/iptv/languages/english.m3u')">🇺🇸 Inglés</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://iptv-org.github.io/iptv/languages/portuguese.m3u')">🇵🇹 Portugués</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://iptv-org.github.io/iptv/languages/french.m3u')">🇫🇷 Francés</div>
+    </div>
+
+    <div class="section">
+      <h4>📱 Plataformas</h4>
+      <div class="world-item" onclick="loadRemoteM3U('https://raw.githubusercontent.com/iptv-org/iptv/master/streams/us_firetv.m3u')">🔥 Fire TV (USA)</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://raw.githubusercontent.com/iptv-org/iptv/master/streams/us_plex.m3u')">📦 Plex (USA)</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://raw.githubusercontent.com/iptv-org/iptv/master/streams/us_xumo.m3u')">📡 Xumo (USA)</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://raw.githubusercontent.com/iptv-org/iptv/master/streams/us_samsung.m3u')">📺 Samsung TV Plus (USA)</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://raw.githubusercontent.com/iptv-org/iptv/master/streams/us_pluto.m3u')">🛰 Pluto TV (USA)</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://raw.githubusercontent.com/iptv-org/iptv/master/streams/us_rakuten.m3u')">🎬 Rakuten TV (USA)</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://raw.githubusercontent.com/iptv-org/iptv/master/streams/us_redbox.m3u')">🟥 Redbox (USA)</div>
+      <div class="world-item" onclick="loadRemoteM3U('https://raw.githubusercontent.com/iptv-org/iptv/master/streams/us_roku.m3u')">📱 Roku TV (USA)</div>
+    </div>
+
+    <ul id="channels"><li>Sube una lista o elige una opción</li></ul>
+  </div>
+</div>
+
+<script>
+  const m3uInput = document.getElementById('m3uInput');
+  const searchInput = document.getElementById('searchInput');
+  const channelList = document.getElementById('channels');
+  const video = document.getElementById('video');
+  let allChannels = [];
+  let currentHls = null;
+
+  m3uInput.addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const content = e.target.result;
+      allChannels = parseM3U(content);
+      displayChannels(allChannels);
+    };
+    reader.readAsText(file);
+  });
+
+  searchInput.addEventListener('input', function () {
+    const filtered = allChannels.filter(c =>
+      c.name.toLowerCase().includes(this.value.toLowerCase())
+    );
+    displayChannels(filtered);
+  });
+
+  function parseM3U(data) {
+    const lines = data.split('\n');
+    const channels = [];
+    let name = '';
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].startsWith('#EXTINF')) {
+        name = lines[i].split(',')[1] || 'Canal';
+      } else if (lines[i].startsWith('http')) {
+        channels.push({ name: name, url: lines[i].trim() });
+      }
+    }
+    return channels;
+  }
+
+  function displayChannels(channels) {
+    channelList.innerHTML = '';
+    if (channels.length === 0) {
+      channelList.innerHTML = '<li>No se encontraron canales</li>';
+      return;
+    }
+    channels.forEach(channel => {
+      const li = document.createElement('li');
+      li.textContent = channel.name;
+      li.onclick = () => playChannel(channel.url);
+      channelList.appendChild(li);
+    });
+  }
+
+  function playChannel(url) {
+    if (currentHls) {
+      currentHls.destroy();
+      currentHls = null;
+    }
+    if (Hls.isSupported()) {
+      currentHls = new Hls();
+      currentHls.loadSource(url);
+      currentHls.attachMedia(video);
+      currentHls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = url;
+      video.addEventListener('loadedmetadata', () => video.play());
+    }
+  }
+
+  function loadRemoteM3U(url) {
+    fetch(url)
+      .then(res => res.text())
+      .then(data => {
+       
+allChannels = parseM3U(data);
+displayChannels(allChannels);
+});
+}
+</script>
+
+</body> </html> ```
